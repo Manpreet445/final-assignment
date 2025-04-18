@@ -13,6 +13,8 @@ def main():
     movie_list.append(Movie(1, "Inception", "Christopher Nolan", 4, True, 5.99, 1.50))
     movie_list.append(Movie(2, "The Dark Knight", "Christopher Nolan", 0, True, 6.99, 2.00))
     movie_list.append(Movie(3, "Interstellar", "Christopher Nolan", 5, False, 7.99, 1.75))
+    
+    input("enter the canalogue file name:")
 
     '''
     Test 1 

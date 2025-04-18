@@ -1,0 +1,107 @@
+import csv 
+import os
+from movie import Movie
+#1	load_movies(file_name)	
+def load_movies(file_name):
+    movies = []
+    if os.path.exists(file_name):
+        with open(file_name, 'r', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                if len(row) == 6:
+                    movie_id = row[0]
+                    title = row[1]
+                    director = row[2]
+                    genre_str = row[3]
+                    available_str = row[4].lower()
+                    price_str = row[5]
+                    rental_count_str = row[6]
+                    if genre_str.isdigit() and available_str in ['true', 'false'] and price_str.replace('.', '', 1).isdigit() and rental_count_str.isdigit():
+                        genre = int(genre_str)
+                        available = available_str == 'true'
+                        price = float(price_str)
+                        rental_count = int(rental_count_str)
+                        movie = Movie(movie_id, title, director, genre, available, price)
+                        for _ in range(rental_count):
+                            movie.borrow_movie()
+                            movie.return_movie()
+                        movies.append(movie)
+                    else:
+                        print(f"Skipping invalid row: {row}")
+                else:
+                    print(f"Skipping row with incorrect number of fields: {row}")
+    else:
+        print(f"The catalog file ({file_name}) is not found.")
+        print("The movie library management system starts without catalog")
+    return movies
+#save_movies(file_name, movies)
+#print_menu()
+def print_menu():
+    print("\nMovie Library - Main Menu")
+    print("="*25)
+    print("1) Search for movies")
+    print("2) Rent a movie")
+    print("3) Return a movie")
+    print("4) Add a movie")
+    print("5) Remove a movie")
+    print("6) Update movie details")
+    print("7) List movies by genre")
+    print("8) Top rented movies")
+    print("9) Check availability by genre")
+    print("10) Display library summary")
+    print("0) Exit the system")
+# search_movies(movies, search_term)
+# rent_movie(movies, movie_id)
+# return_movie(movies, movie_id)
+# add_movie(movies)
+# remove_movie(movies)
+# update_movie_details(movies)
+# list_movies_by_genre(movies)
+# check_availability_by_genre(movies)
+# display_library_summary(movies)
+# top_rented_movies(movies)
+# print_movies(movies)
+# movie_index(movies, movie_id)
+def main():
+    input_file = input("Enter the catalog file name: ")
+    movies = load_movies(input_file)
+    choice = ""
+    while choice != "0":
+        print_menu()
+        choice = input("Enter your choice (1-10, 0 to exit): ")
+        if choice == "0":
+            update_catalog = input("Would you like to update the catalog (yes/y, no/n)? ")
+            if update_catalog.lower() in ['yes', 'y']:
+                save_movies(input_file, movies)
+            else:
+                print("Movie catalog has not been updated.")
+            print("Goodbye!")
+        elif choice == "1":
+            search_term = input("Enter the search term: ")
+            search_movies(movies, search_term)
+        elif choice == "2":
+            movie_id = int(input("Enter the movie ID to rent: "))
+            rent_movie(movies, movie_id)
+        elif choice == "3":
+            movie_id = int(input("Enter the movie ID to return: "))
+            return_movie(movies, movie_id)
+        elif choice == "4":
+            add_movie(movies)
+        elif choice == "5":
+            remove_movie(movies)
+        elif choice == "6":
+            update_movie_details(movies)
+        elif choice == "7":
+            list_movies_by_genre(movies)
+        elif choice == "8":
+            check_availability_by_genre(movies)
+        elif choice == "9":
+            display_library_summary(movies)
+        elif choice == "10":
+            top_rented_movies(movies)
+        else:
+            print("Invalid choice. Please try again.")
+  
+
+if __name__ == "__main__":
+    main()
