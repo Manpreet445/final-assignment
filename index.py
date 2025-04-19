@@ -8,24 +8,21 @@ def load_movies(file_name):
         with open(file_name, 'r', newline='') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
-                for row in csv.reader(csvfile):
-
-                    movie_id = row[0]
-                    title = row[1]
-                    director = row[2]
-                    genre = int(row[3])
-                    available = row[4]
-                    price = float(row[5])
-                    rental_count = int(row[6])
-
+                movie_id = row[0]
+                title = row[1]
+                director = row[2]
+                genre = int(row[3])
+                available = row[4]
+                price = float(row[5])
+                rental_count = int(row[6])
                     
-                    if available == 'true':
-                        available = True
-                    else:
-                        available = False
-                    
-                    movie = Movie(movie_id, title, director, genre, available, price,rental_count)
-                    movies.append(movie)
+                if available == 'true':
+                    available = True
+                else:
+                    available = False
+                
+                movie = Movie(movie_id, title, director, genre, available, price,rental_count)
+                movies.append(movie)                    
         return movies
     else:
         print(f"The catalog file ({file_name}) is not found\nThe movie library management system starts without catalog")
@@ -51,10 +48,56 @@ def print_menu():
     print("0) Exit the system")
 # search_movies(movies, search_term)
 # rent_movie(movies, movie_id)
+def rent_movie(movies, movie_id):
+    found = False
+    for movie in movies:
+        if movie.get_id() == movie_id:
+            
+            if movie.get_availability() == "Available":
+                movie.borrow_movie()
+                print(f"Movie '{movie.get_title()}' has been rented.")
+            else:
+                print(f"Movie '{movie.get_title()}' is already rented.")
+            return
+        print(f"Movie with ID '{movie_id}' not found.")
+    
 # return_movie(movies, movie_id)
+def return_movie(movies, movie_id):
+    for movie in movies:
+        if movie.get_id() == movie_id:
+            if movie.get_availability() == "Rented":
+                movie.return_movie()
+                print(f"Movie '{movie.get_title()}' has been returned.")
+            else:
+                print(f"Movie '{movie.get_title()}' is not rented.")
+            return 
+    
 # add_movie(movies)
 # remove_movie(movies)
-# update_movie_details(movies)
+def update_movie_details(movies):
+    movie_id = int(input("Enter the movie ID to update: "))
+    for movie in movies:
+        if movie.get_id() == movie_id:
+            print("Current details:")
+            print(movie)
+            title = input("Enter new title (leave blank to keep current): ")
+            if title:
+                movie.set_title(title)
+            director = input("Enter new director (leave blank to keep current): ")
+            if director:
+                movie.set_director(director)
+            genre = int(input("Enter new genre (leave blank to keep current): "))
+            if genre:
+                movie.set_genre(genre)
+            price = float(input("Enter new price (leave blank to keep current): "))
+            if price:
+                movie.set_price(price)
+            fine_rate = float(input("Enter new fine rate (leave blank to keep current): "))
+            if fine_rate:
+                movie.set_fine_rate(fine_rate)
+            print(f"Movie '{movie.get_title()}' details updated.")
+            return
+    print("Movie not found.")
 # list_movies_by_genre(movies)
 # check_availability_by_genre(movies)
 # display_library_summary(movies)
@@ -67,7 +110,7 @@ def main():
     choice = ""
     while choice != "0":
         print_menu()
-        choice = input("Enter your choice (1-10, 0 to exit): ")
+        choice = input("Enter your selection: ")
         if choice == "0":
             update_catalog = input("Would you like to update the catalog (yes/y, no/n)? ")
             if update_catalog.lower() in ['yes', 'y']:
@@ -79,10 +122,10 @@ def main():
             search_term = input("Enter the search term: ")
             search_movies(movies, search_term)
         elif choice == "2":
-            movie_id = int(input("Enter the movie ID to rent: "))
+            movie_id = input("Enter the movie ID to rent: ")
             rent_movie(movies, movie_id)
         elif choice == "3":
-            movie_id = int(input("Enter the movie ID to return: "))
+            movie_id = input("Enter the movie ID to return: ")
             return_movie(movies, movie_id)
         elif choice == "4":
             add_movie(movies)
