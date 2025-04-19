@@ -8,32 +8,31 @@ def load_movies(file_name):
         with open(file_name, 'r', newline='') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
-                if len(row) == 6:
+                for row in csv.reader(csvfile):
+
                     movie_id = row[0]
                     title = row[1]
                     director = row[2]
-                    genre_str = row[3]
-                    available_str = row[4].lower()
-                    price_str = row[5]
-                    rental_count_str = row[6]
-                    if genre_str.isdigit() and available_str in ['true', 'false'] and price_str.replace('.', '', 1).isdigit() and rental_count_str.isdigit():
-                        genre = int(genre_str)
-                        available = available_str == 'true'
-                        price = float(price_str)
-                        rental_count = int(rental_count_str)
-                        movie = Movie(movie_id, title, director, genre, available, price)
-                        for _ in range(rental_count):
-                            movie.borrow_movie()
-                            movie.return_movie()
-                        movies.append(movie)
+                    genre = int(row[3])
+                    available = row[4]
+                    price = float(row[5])
+                    rental_count = int(row[6])
+
+                    
+                    if available == 'true':
+                        available = True
                     else:
-                        print(f"Skipping invalid row: {row}")
-                else:
-                    print(f"Skipping row with incorrect number of fields: {row}")
+                        available = False
+                    
+                    movie = Movie(movie_id, title, director, genre, available, price,rental_count)
+                    movies.append(movie)
+        return movies
     else:
-        print(f"The catalog file ({file_name}) is not found.")
-        print("The movie library management system starts without catalog")
-    return movies
+        print(f"The catalog file ({file_name}) is not found\nThe movie library management system starts without catalog")
+        return movies
+
+
+    
 #save_movies(file_name, movies)
 #print_menu()
 def print_menu():
