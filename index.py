@@ -7,29 +7,26 @@ def load_movies(file_name):
     if os.path.exists(file_name):
         with open(file_name, 'r', newline='') as csvfile:
             reader = csv.reader(csvfile)
+            next(reader)  # Skip the header row
             for row in reader:
-                movie_id = row[0]
-                title = row[1]
-                director = row[2]
-                genre = int(row[3])
-                available = row[4]
-                price = float(row[5])
-                rental_count = int(row[6])
-                    
-                if available == 'true':
-                    available = True
-                else:
-                    available = False
-                
-                movie = Movie(movie_id, title, director, genre, available, price,rental_count)
-                movies.append(movie)                    
+                try:
+                    movie_id = row[0]
+                    title = row[1]
+                    director = row[2]
+                    genre = int(row[3])
+                    available_str = row[4].lower()
+                    available = True if available_str == 'true' else False
+                    price = float(row[5])
+
+                    movie = Movie(movie_id, title, director, genre, available, price)
+                    movies.append(movie)
+                except (ValueError, IndexError) as e:
+                    print(f"Error reading row: {row} - {e}")
         return movies
     else:
         print(f"The catalog file ({file_name}) is not found\nThe movie library management system starts without catalog")
         return movies
 
-
-    
 #save_movies(file_name, movies)
 def save_movies(file_name, movies):
     with open(file_name, 'w', newline='') as csvfile:
@@ -55,30 +52,28 @@ def print_menu():
 # search_movies(movies, search_term)
 # rent_movie(movies, movie_id)
 def rent_movie(movies, movie_id):
-    found = False
     for movie in movies:
         if movie.get_id() == movie_id:
-            found = True
-            if movie.get_availability() == 'True':
+            if movie.get_availability():
                 movie.borrow_movie()
                 print(f"Movie '{movie.get_title()}' has been rented.")
+                return
             else:
                 print(f"Movie '{movie.get_title()}' is already rented.")
-            break
-    if not found:
-        print(f"Movie with ID '{movie_id}' not found.")
-    
+                return
+    print(f"Movie with ID '{movie_id}' not found.")
 # return_movie(movies, movie_id)
 def return_movie(movies, movie_id):
     for movie in movies:
         if movie.get_id() == movie_id:
-            if movie.get_availability() == "Rented":
+            if not movie.get_availability():
                 movie.return_movie()
-                print(f"Movie '{movie.get_title()}' has been returned.")
+                print(f"You have successfully returned '{movie.get_title()}'.")
+                return
             else:
-                print(f"Movie '{movie.get_title()}' is not rented.")
-            return 
-        print(f"Movie with ID '{movie_id}' not found.")
+                print(f"'{movie.get_title()}' was not rented.")
+                return
+    print(f"Movie with ID '{movie_id}' not found.")
 # add_movie(movies)
 # remove_movie(movies)
 def update_movie_details(movies):
@@ -104,7 +99,8 @@ def update_movie_details(movies):
                 movie.set_fine_rate(fine_rate)
             print(f"Movie '{movie.get_title()}' details updated.")
             return
-    print("Movie not found.")
+        else:
+            print("Movie not found.")
 # list_movies_by_genre(movies)
 # check_availability_by_genre(movies)
 # display_library_summary(movies)
