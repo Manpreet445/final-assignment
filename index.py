@@ -31,6 +31,12 @@ def load_movies(file_name):
 
     
 #save_movies(file_name, movies)
+def save_movies(file_name, movies):
+    with open(file_name, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        for movie in movies:
+            writer.writerow([movie.get_id(), movie.get_title(), movie.get_director(), movie.get_genre(), movie.get_availability(), movie.get_price(), movie.get_rental_count()])
+    print(f"Catalog file '{file_name}' has been updated.")
 #print_menu()
 def print_menu():
     print("\nMovie Library - Main Menu")
@@ -49,10 +55,8 @@ def print_menu():
 # search_movies(movies, search_term)
 # rent_movie(movies, movie_id)
 def rent_movie(movies, movie_id):
-    found = False
     for movie in movies:
         if movie.get_id() == movie_id:
-            
             if movie.get_availability() == "Available":
                 movie.borrow_movie()
                 print(f"Movie '{movie.get_title()}' has been rented.")
@@ -71,7 +75,7 @@ def return_movie(movies, movie_id):
             else:
                 print(f"Movie '{movie.get_title()}' is not rented.")
             return 
-    
+        print(f"Movie with ID '{movie_id}' not found.")
 # add_movie(movies)
 # remove_movie(movies)
 def update_movie_details(movies):
@@ -113,7 +117,8 @@ def main():
         choice = input("Enter your selection: ")
         if choice == "0":
             update_catalog = input("Would you like to update the catalog (yes/y, no/n)? ")
-            if update_catalog.lower() in ['yes', 'y']:
+            if update_catalog.lower() == 'yes' or 'y':
+                
                 save_movies(input_file, movies)
             else:
                 print("Movie catalog has not been updated.")
