@@ -55,14 +55,17 @@ def print_menu():
 # search_movies(movies, search_term)
 # rent_movie(movies, movie_id)
 def rent_movie(movies, movie_id):
+    found = False
     for movie in movies:
         if movie.get_id() == movie_id:
-            if movie.get_availability() == "Available":
+            found = True
+            if movie.get_availability() == 'True':
                 movie.borrow_movie()
                 print(f"Movie '{movie.get_title()}' has been rented.")
             else:
                 print(f"Movie '{movie.get_title()}' is already rented.")
-            return
+            break
+    if not found:
         print(f"Movie with ID '{movie_id}' not found.")
     
 # return_movie(movies, movie_id)
@@ -118,7 +121,6 @@ def main():
         if choice == "0":
             update_catalog = input("Would you like to update the catalog (yes/y, no/n)? ")
             if update_catalog.lower() == 'yes' or 'y':
-                
                 save_movies(input_file, movies)
             else:
                 print("Movie catalog has not been updated.")
