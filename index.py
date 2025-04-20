@@ -17,10 +17,10 @@ def load_movies(file_name):
                 genre = int(row[3])      
                 availability = row[4] == 'True' 
                 price = float(row[5])
-                rental_count = int(row[6]) if len(row) > 6 else 0  #Default to 0 if not present
+                
                 
                 #Create movie object and add to list
-                movie = Movie(movie_id, title, director, genre, availability, price, rental_count)
+                movie = Movie(movie_id, title, director, genre, availability, price,)
                 movies.append(movie)
                 
         return movies
@@ -33,7 +33,7 @@ def save_movies(file_name, movies):
     with open(file_name, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         for movie in movies:
-            writer.writerow([movie.get_id(), movie.get_title(), movie.get_director(), movie.get_genre(), movie.get_availability(), movie.get_price(), movie.get_rental_count()])
+            writer.writerow([movie.get_id(), movie.get_title(), movie.get_director(), movie.get_genre(), movie.get_availability(), movie.get_price()])
     print(f"Catalog file '{file_name}' has been updated.")
 #print_menu()
 def print_menu():
@@ -55,21 +55,22 @@ def search_movies(movies, search_term):
     results = []
     search_term = search_term.strip().lower()  # Make the search term lowercase to make it case-insensitive
     for movie in movies:
+        #this if will check if the search term is in the title, director, or genre and append it to the results list
         if (search_term in (movie.get_title()).lower() or 
             search_term in (movie.get_director()).lower() or 
             search_term in (movie.get_genre_name()).lower()):
             results.append(movie)
-    
-    if results:
+            
+    if results != []:
         print(f"Finding ({search_term}) in title, director, or genre...")
-        print(f"{'ID':<4}{'Title':<35}{'Director':<25}{'Genre':<15}{'Availability':<12}   {'Price $':<2}")
-        print("-" * 95)
+        print(f"{'ID':<4}{'Title':<35}{'Director':<25}{'Genre':<15}{'Availability':<12}  {'Price $':<2}   {'Rental Count':<10}")
+        print("-" * 114)
         for movie in results:
             if movie.get_availability() == "True":
                 available = "Available"
             else:
                 available = "Rented"
-            print(f"{movie.get_id():<4}{movie.get_title():<35}{movie.get_director():<25}{movie.get_genre_name():<15}{available:<12}   {movie.get_price():<2}")
+            print(f"{movie.get_id():<4}{movie.get_title():<35}{movie.get_director():<25}{movie.get_genre_name():<15}{available:<12}   {movie.get_price():<2}         {movie.get_rental_count():<10}")
     else:
         print(f"Finding ({search_term}) in title, director, or genre...")
         print("No matching movies found.")
@@ -128,7 +129,7 @@ def remove_movie(movies):
         if str(movie.get_id()) == movie_id:  
             movies.remove(movie)
             save_movies('movies.csv', movies) 
-            print(f"Movie with ID '{movie_id}' removed successfully.")
+            print(f"Movie '{movie.get_title()}'has been removed.")
             return
     print(f"Movie with ID '{movie_id}' not found.")
 # update_movie_details(movies)
@@ -167,7 +168,7 @@ def update_movie_details(movies):
 def list_movies_by_genre(movies):
     genre = int(input("Enter the genre (0-9): "))
     matching_movies = []
-    print(f"{'ID':<4}{'Title':<35}{'Director':<25}{'Genre':<15}{'Availability':<12}     {'Price $':>6}")
+    print(f"{'ID':<4}{'Title':<35}{'Director':<25}{'Genre':<15}{'Availability':<12}{'Price $':>6}")
     print("-" * 105)
     
     for movie in movies:
