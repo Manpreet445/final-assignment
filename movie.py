@@ -1,82 +1,89 @@
 class Movie:
-    GENRE_NAMES = ["Action", "Comedy", "Drama", "Horror", "Sci-Fi", "Romance", "Thriller", "Animation", "Documentary", "Fantasy"]
+    GENRE_NAMES = [
+        "Action", "Comedy", "Drama", "Horror", "Sci-Fi", 
+        "Romance", "Thriller", "Animation", "Documentary", "Fantasy"
+    ]
+    
+    def __init__(self, movie_id, title, director, genre, available=True, price=0.00, fine_rate=0.00, rental_count=0):
+        self.__id = movie_id
+        self.__title = title
+        self.__director = director
+        self.__genre = genre
+        self.__available = available
+        self.__price = price
+        self.__fine_rate = fine_rate
+        self.__rental_count = rental_count
 
-    def __init__(self, movie_id, title, director, genre, available=True, price=0.0, rental_count=0):
-        self._id = movie_id
-        self.title = title
-        self.director = director
-        self.genre = genre
-        self.available = available
-        self.price = price
-        self.rental_count = rental_count
-
+    # Getters
     def get_id(self):
-        return self._id
-
-    def set_id(self, movie_id):
-        if movie_id:  # Basic validation to ensure ID is not empty
-            self._id = movie_id
-        else:
-            print("Error: Movie ID cannot be empty.")
+        return self.__id
 
     def get_title(self):
-        return self.title
-
-    def set_title(self, title):
-        self.title = title
+        return self.__title
 
     def get_director(self):
-        return self.director
-
-    def set_director(self, director):
-        self.director = director
+        return self.__director
 
     def get_genre(self):
-        return self.genre
-
-    def set_genre(self, genre):
-        self.genre = genre
+        return self.__genre
 
     def get_price(self):
-        return self.price
+        return f"{self.__price:.2f}"
 
-    def set_price(self, price):
-        self.price = price
+    def get_fine_rate(self):
+        return self.__fine_rate
 
     def get_rental_count(self):
-        return self.rental_count
+        return self.__rental_count
 
     def get_genre_name(self):
-        return Movie.GENRE_NAMES[self.genre]
+        return Movie.GENRE_NAMES[self.__genre]
 
     def get_availability(self):
-        if self.available:
-            return "Available"
+        if self.__available:
+            return "True"
         else:
-            return "Rented"
+            return "False"
 
-    def set_availability(self, available):
-            self.available = available
+    # Setters
+    def set_id(self, movie_id):
+        self.__id = movie_id
 
+    def set_title(self, title):
+        self.__title = title
+
+    def set_director(self, director):
+        self.__director = director
+
+    def set_genre(self, genre):
+        self.__genre = genre
+
+    def set_price(self, price):
+        self.__price = price
+
+    def set_fine_rate(self, fine_rate):
+        self.__fine_rate = fine_rate
+
+    # Borrow movie
     def borrow_movie(self):
-        if self.available:
-            self.available = False
-            self.rental_count += 1
-            return 
-        
-    def return_movie(self):
-        if not self.available:
-            self.available = True
-            return 
-       
+        if self.__available:
+            self.__available = False
+            self.__rental_count += 1
+        else:
+            print(f"The movie {self.__title} is already rented.")
 
+    # Return movie
+    def return_movie(self):
+        self.__available = True
+
+    # String representation
     def __str__(self):
-        return "{:>10}{:>30}{:>25}{:>15}{:>15}{:>15.2f}{:>15}".format(
-            str(self._id),
-            self.title,
-            self.director,
+        return "{:^10}{:^30}{:^25}{:^15}{:^15}{:^15.2f}{:^15.2f}{:^15}".format(
+            str(self.__id),
+            self.__title,
+            self.__director,
             self.get_genre_name(),
             self.get_availability(),
-            self.price,
-            str(self.rental_count)
-        )
+            self.__price,
+            self.__fine_rate,
+            str(self.__rental_count))

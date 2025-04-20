@@ -2,19 +2,15 @@ import csv
 import os
 from movie import Movie
 #1	load_movies(file_name)	
-input_file = input("Enter the catalog file name: ")
+
 def load_movies(file_name):
     movies = []
     #Check if file exists
-    if not os.path.exists(file_name):
+    if os.path.exists(file_name):
         
         with open(file_name, 'r') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
-                #Skip empty rows
-                if not row:
-                    continue
-
                 movie_id = int(row[0])
                 title = row[1]    
                 director = row[2]   
@@ -234,8 +230,8 @@ def display_library_summary(movies):
     print(f"Unavailable Movies: {unavailable_movies}")
 # main()
 def main():
-    
-    movies = load_movies(input_file)
+    file_name = input("Enter the catalog file name: ")
+    movies = load_movies(file_name)
     choice = ""
     while choice != "0":
         print_menu()
@@ -243,7 +239,7 @@ def main():
         if choice == "0":
             update_catalog = input("Would you like to update the catalog (yes/y, no/n)? ")
             if update_catalog.lower() in ['yes', 'y']:
-                save_movies(input_file, movies)
+                save_movies(file_name, movies)
             else:
                 print("Movie catalog has not been updated.")
             print("Goodbye!")
