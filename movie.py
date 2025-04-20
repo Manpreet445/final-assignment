@@ -1,9 +1,15 @@
 class Movie:
+    '''
+    Movie class to represent a movie in a rental system.
+    Each movie has an ID, title, director, genre, availability status,
+    rental price, fine rate, and rental count.
+    '''
     GENRE_NAMES = [
-        "Action", "Comedy", "Drama", "Horror", "Sci-Fi", 
+        "Action", "Comedy", "Drama", "Horror", "Sci-Fi",              
         "Romance", "Thriller", "Animation", "Documentary", "Fantasy"
-    ]
+    ]   # List of genre names for easy reference
     
+    ''' Constructor to initialize a Movie object with the given attributes.'''
     def __init__(self, movie_id, title, director, genre, available=True, price=0.00, fine_rate=0.00, rental_count=0):
         self.__id = movie_id
         self.__title = title
@@ -37,9 +43,11 @@ class Movie:
         return self.__rental_count
 
     def get_genre_name(self):
+        # Retrieve the genre name from the GENRE_NAMES list using the genre index
         return Movie.GENRE_NAMES[self.__genre]
 
-    def get_availability(self):
+    def get_availability(self):  ## Check if the movie is available for rent
+        # Return "True" if available, otherwise "False"
         if self.__available:
             return "True"
         else:
@@ -66,15 +74,13 @@ class Movie:
 
     # Borrow movie
     def borrow_movie(self):
-        if self.__available:
-            self.__available = False
-            self.__rental_count += 1
-        else:
-            print(f"The movie {self.__title} is already rented.")
+        self.__available = False    # Mark as not available
+        self.__rental_count += 1
+        
 
     # Return movie
     def return_movie(self):
-        self.__available = True
+        self.__available = True   # Mark as available
 
     # String representation
     def __str__(self):
