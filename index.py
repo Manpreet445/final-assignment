@@ -124,7 +124,7 @@ def return_movie(movies, movie_id):
 def add_movie(movies):
     movie_id = input("Enter movie ID: ")
     for movie in movies:
-        if movie.get_id() == int(movie_id): #Checks for a matching movie ID, doesn't continue if it exists
+        if movie.get_id() == movie_id: #Checks for a matching movie ID, doesn't continue if it exists
             print(f"Movie with ID {movie_id} exists.")
             return
     title = input("Enter title: ").title()
@@ -198,18 +198,17 @@ def update_movie_details(movies):
 '''this function will list all movies of a specific genre.'''
 def list_movies_by_genre(movies):
     genre = int(input("Enter the genre (0-9): "))
-    matching_movies = []  #List to store movies of the specified genre
+    matching_movies = []
     
     for movie in movies:
-        if movie.get_genre() == genre:    #Check if the movie matches the genre
+        if movie.get_genre() == genre:
             if movie.get_availability() == "True":    #Checking for availability
                 available = "Available"  ##If the movie is available, it will show "Available"
             else:
-                available = "Rented"     ##If the movie is not available, it will show "Rented"
-            #Add the movie details to the matching_movies list
+                available = "Rented"
             matching_movies.append(f"{movie.get_id():<4}{movie.get_title():<35}{movie.get_director():<25}{movie.get_genre_name():<15}{available:<12}   {movie.get_price():<2}    {movie.get_rental_count():<10}")
     
-    if matching_movies:
+    if matching_movies != []: #Main process if the matching movies list is not empty
         print(f"{'ID':<4}{'Title':<35}{'Director':<25}{'Genre':<15}{'Availability':<12}   {'Price $':<1} {'Rental Count':<10}")
         print("-" * 105)
         for movie_line in matching_movies:
