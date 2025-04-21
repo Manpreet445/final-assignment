@@ -222,14 +222,15 @@ def check_availability_by_genre(movies):
     genre = int(input("Enter the genre (0-9): ")) 
     available_movies = [] #List to store available movies of the specified genre
     for movie in movies:
-        if movie.get_genre() == genre and movie.get_availability() == "True":  #Check if the movie is available and matches the genre
+        if movie.get_genre() == genre and movie.get_availability() == "True":  #Check if the movie is available and matches the genre'
+            available = "Available"
             available_movies.append(movie)
     #If there are available movies, print their details
     if available_movies:
         print(f"{'ID':<4}{'Title':<35}{'Director':<25}{'Genre':<15}{'Availability':<12}   {'Price $':<1} {'Rental Count':<10}")
         print("-" * 105)
         for movie in available_movies:
-            print(f"{movie.get_id():<4}{movie.get_title():<35}{movie.get_director():<25}{movie.get_genre_name():<15}{movie.get_availability():<12}   {movie.get_price():<2}    {movie.get_rental_count():<10}")
+            print(f"{movie.get_id():<4}{movie.get_title():<35}{movie.get_director():<25}{movie.get_genre_name():<15}{available:<12}   {movie.get_price():<2}    {movie.get_rental_count():<10}")
     else:
         print(f"No movies available in genre {genre}.")
 

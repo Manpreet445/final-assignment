@@ -757,8 +757,8 @@ Enter your selection: 9
 Enter the genre (0-9): 4
 ID  Title                              Director                 Genre          Availability   Price $ Rental Count
 ---------------------------------------------------------------------------------------------------------   
-1   Inception                          Christopher Nolan        Sci-Fi         True           5.99    0     
-4   The Matrix                         Lana Wachowski           Sci-Fi         True           4.99    0
+1   Inception                          Christopher Nolan        Sci-Fi         Available      5.99    0     
+4   The Matrix                         Lana Wachowski           Sci-Fi         Available      4.99    0
 ---------------------------------------
 >Test 12
 Movie Library - Main Menu
