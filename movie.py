@@ -84,12 +84,7 @@ class Movie:
 
     # String representation
     def __str__(self):
-        return "{:^10}{:^30}{:^25}{:^15}{:^15}{:^15.2f}{:^15.2f}{:^15}".format(
-            str(self.__id),
-            self.__title,
-            self.__director,
-            self.get_genre_name(),
-            self.get_availability(),
-            self.__price,
-            self.__fine_rate,
-            str(self.__rental_count))
+        return (f"{'ID':<4}{'Title':<35}{'Director':<25}{'Genre':<15}{'Availability':<12}   {'Price $':<1} {'Rental Count':<10}\n "
+                f"{'-' * 104}\n"
+                f"{self.__id:<4}{self.__title:<35}{self.__director:<25}{self.get_genre_name():<15}{self.get_availability():<12}   {self.__price:<2}    {self.__rental_count:<10}")
+         

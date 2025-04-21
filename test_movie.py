@@ -29,8 +29,8 @@ def main():
           "\nDirector:", current_movie.get_director(),
           "\nGenre:", current_movie.get_genre_name(),
           "\nAvailability:", current_movie.get_availability(),
-          "\nPrice: ${:.2f}".format(current_movie.get_price()),
-          "\nFine Rate: ${:.2f}/day".format(current_movie.get_fine_rate()),
+          "\nPrice: ${:.2f}" .format(float(current_movie.get_price())),
+          "\nFine Rate: ${:.2f}/day" .format(float(current_movie.get_fine_rate())),
           "\nRental Count:", current_movie.get_rental_count())
     
     '''
