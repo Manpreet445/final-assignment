@@ -1,14 +1,17 @@
 '''
-Project Name: Classes
-Description: A Python application that manages a movie library system.
-Group members: Patrick, Manpreet, Anthony
+Project Name: Movie Library Management System
+Description: A Python application designed to manage a movie library system. 
+             This system allows users to search, rent, return, add, remove, and update movies. 
+             It also provides features to list movies by genre, check availability, view top rented movies, 
+             and display a summary of the library.
+Group Members: Patrick, Manpreet, Anthony
 '''
 
 import csv 
 import os
 from movie import Movie
 #1	load_movies(file_name)	
-#Loads movies from a CSV file and returns them into a list of Movie objects.
+'''Loads movies from a CSV file and returns them into a list of Movie objects.'''
 def load_movies(file_name):
     movies = []
     #Check if file exists
@@ -35,15 +38,16 @@ def load_movies(file_name):
         return movies
 
 #save_movies(file_name, movies)
-#Any function that calls this function will save their updates to the CSV file
+'''Any function that calls this function will save their updates to the CSV file'''
 def save_movies(file_name, movies):
-    with open(file_name, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        for movie in movies:
+    with open(file_name, 'w', newline='') as csvfile:   
+        writer = csv.writer(csvfile)    ##Open the file in write mode
+        for movie in movies:  ##Iterate through the list of movies and write each movie's details to the CSV file
+            #Get the details of each movie using the getters from the Movie class
             writer.writerow([movie.get_id(), movie.get_title(), movie.get_director(), movie.get_genre(), movie.get_availability(), movie.get_price()])
 
 #print_menu()
-#Displays the main menu of the movie library system.
+'''Displays the main menu of the movie library system.'''
 def print_menu():
     print("\nMovie Library - Main Menu")
     print("="*25)
@@ -60,7 +64,7 @@ def print_menu():
     print("0) Exit the system")
 
 # search_movies(movies, search_term)
-#This function will search for movies based on the title, director, or genre.
+'''This function will search for movies based on the title, director, or genre.'''
 def search_movies(movies, search_term):
     results = []
     search_term = search_term.strip().lower()  # Make the search term lowercase to make it case-insensitive
@@ -86,27 +90,27 @@ def search_movies(movies, search_term):
         print("No matching movies found.")
 
 # rent_movie(movies, movie_id)
-#This function will rent a movie if it is available. Also adds to the rental count.
+'''This function will rent a movie if it is available. Also adds to the rental count.'''
 def rent_movie(movies, movie_id):
     for movie in movies:
         if movie.get_id() == int(movie_id):  #Checks for a matching movie ID
             if movie.get_availability() == "True":
-                movie.borrow_movie()  
+                movie.borrow_movie()  #Mark as not available
                 save_movies('movies.csv', movies)  
                 print(f"You have successfully rented '{movie.get_title()}'.")
-                return
+                return  
             else:
                 print(f"Movie '{movie.get_title()}' is already rented.")
                 return
     print(f"Movie with ID {movie_id} not found.")
 
 # return_movie(movies, movie_id)
-#This function will return a movie if it is rented.
+'''This function will return a movie if it is rented.'''
 def return_movie(movies, movie_id):
     for movie in movies:
         if movie.get_id() == int(movie_id):  
-            if movie.get_availability() == "False": 
-                movie.return_movie()  
+            if movie.get_availability() == "False":    #Checks for a matching movie ID
+                movie.return_movie()  #Mark as available
                 save_movies('movies.csv', movies)  
                 print(f"You have successfully returned '{movie.get_title()}'.")
                 return
@@ -116,7 +120,7 @@ def return_movie(movies, movie_id):
     print(f"Movie with ID '{movie_id}' not found.")
 
 # add_movie(movies)
-#This function will add a new movie to the list of movies.
+'''This function will add a new movie to the list of movies.'''
 def add_movie(movies):
     movie_id = input("Enter movie ID: ")
     for movie in movies:
@@ -139,26 +143,30 @@ def add_movie(movies):
     print(f"Movie '{title}' added successfully.")
 
 # remove_movie(movies)
-#This function will remove a movie from the list of movies. 
+'''This function will remove a movie from the list of movies. '''
 def remove_movie(movies):
     movie_id = input("Enter the movie ID to remove: ").strip()  
     for movie in movies:
         if str(movie.get_id()) == movie_id:  
-            movies.remove(movie)
+            movies.remove(movie)  #Removes the movie from the list 
             save_movies('movies.csv', movies) #Saving to CSV
             print(f"Movie '{movie.get_title()}' has been removed.")
             return
     print(f"Movie with ID {movie_id} not found.")
 
 # update_movie_details(movies)
-#This function will update the details of an existing movie.
+'''This function will update the details of an existing movie.'''
 def update_movie_details(movies):
     movie_id = int(input("Enter the movie ID to update: "))
     for movie in movies:
         if movie.get_id() == movie_id:
             print("Leave fields blank to keep current values.")
             title = input(f"Enter new title (Current: {movie.get_title()}): ").strip().title()
-            if title:
+            #Check if the title is not empty
+            #If the title is empty, it will not update the current title
+            #doing the same for all the rest of the fields
+            #If the title is not empty, it will update the current title
+            if title != "":
                 movie.set_title(title)
             
             director = input(f"Enter new director (Current: {movie.get_director()}): ").strip().title()
@@ -166,7 +174,8 @@ def update_movie_details(movies):
                 movie.set_director(director)
             
             genre = input(f"Enter new genre (Current:{movie.get_genre_name()}): ").strip()
-            if genre:
+            if genre != "":
+                #Check if the genre is a valid number between 0 and 9
                 genre_num = int(genre)
                 if 0 <= genre_num <= 9:
                     movie.set_genre(genre_num)
@@ -175,7 +184,8 @@ def update_movie_details(movies):
                     return
             
             price = input(f"Enter new price (Current:{movie.get_price()}): ").strip()
-            if price:
+            if price != "":     
+                #Check if the price is a valid number
                 price_val = float(price)
                 movie.set_price(round(price_val, 2)) #Again, ensures that the price is 2 decimal places
             
@@ -185,14 +195,18 @@ def update_movie_details(movies):
     print(f"Movie with ID {movie_id} is not found.")
 
 # list_movies_by_genre(movies)
-#This function will list all movies of a specific genre.
+'''this function will list all movies of a specific genre.'''
 def list_movies_by_genre(movies):
     genre = int(input("Enter the genre (0-9): "))
-    matching_movies = []
+    matching_movies = []  #List to store movies of the specified genre
     
     for movie in movies:
-        if movie.get_genre() == genre:
-            available = "Available" if movie.get_availability() == "True" else "Rented"
+        if movie.get_genre() == genre:    #Check if the movie matches the genre
+            if movie.get_availability() == "True":    #Checking for availability
+                available = "Available"  ##If the movie is available, it will show "Available"
+            else:
+                available = "Rented"     ##If the movie is not available, it will show "Rented"
+            #Add the movie details to the matching_movies list
             matching_movies.append(f"{movie.get_id():<4}{movie.get_title():<35}{movie.get_director():<25}{movie.get_genre_name():<15}{available:<12}   {movie.get_price():<2}    {movie.get_rental_count():<10}")
     
     if matching_movies:
@@ -204,14 +218,14 @@ def list_movies_by_genre(movies):
         print(f"Invalid Genre: Enter a valid genre (0-9)")
 
 # check_availability_by_genre(movies)
-#This function will check the availability of movies by genre. Lists all available movies of a specific genre.
+'''This function will check the availability of movies by genre. Lists all available movies of a specific genre.'''
 def check_availability_by_genre(movies):
-    genre = int(input("Enter the genre (0-9): "))
-    available_movies = []
+    genre = int(input("Enter the genre (0-9): ")) 
+    available_movies = [] #List to store available movies of the specified genre
     for movie in movies:
-        if movie.get_genre() == genre and movie.get_availability() == "True":
+        if movie.get_genre() == genre and movie.get_availability() == "True":  #Check if the movie is available and matches the genre
             available_movies.append(movie)
-    
+    #If there are available movies, print their details
     if available_movies:
         print(f"{'ID':<4}{'Title':<35}{'Director':<25}{'Genre':<15}{'Availability':<12}   {'Price $':<1} {'Rental Count':<10}")
         print("-" * 105)
@@ -221,66 +235,70 @@ def check_availability_by_genre(movies):
         print(f"No movies available in genre {genre}.")
 
 # top_rented_movies(movies)
-#This function will list the top 5 most rented movies.
+'''This function will list the top 5 most rented movies.'''
 def top_rented_movies(movies):
     sorted_movies = sorted(movies, key=lambda movie: movie.get_rental_count(), reverse=True) # The lambda function sorts the movies by rental count in descending order
     print(f"{'ID':<4}{'Title':<35}{'Director':<25}{'Genre':<15}{'Availability':<12}    {'Rentals':<1}")
     print("-" * 100)
     
     for movie in sorted_movies[:5]: # Show top 5 most rented movies
-        available = "Available" if movie.get_availability() == "True" else "Rented"
+        if movie.get_availability() == "True": #Checking for availability
+            available = "Available"  ##If the movie is available, it will show "Available"
+        else:
+            available = "Rented"  ##If the movie is not available, it will show "Rented"
         print(f"{movie.get_id():<4}{movie.get_title():<35}{movie.get_director():<25}{movie.get_genre_name():<15}{available:<12}    {movie.get_rental_count():<1}")
 
 # print_movies(movies)
-#This function will print all movies in the list.
+'''This function will print all movies in the list.'''  
 def print_movies(movies):
+    ## Print the header for the movie list
     print(f"{'ID':<4}{'Title':<35}{'Director':<25}{'Genre':<15}{'Availability':<12}   {'Price $':<1}    {'Rental Count':<10}")
     print("-" * 105) 
-    
+    ## Iterate through the list of movies and print their details
     for movie in movies:
         print(f"{movie.get_id():<4}{movie.get_title():<35}{movie.get_director():<25}{movie.get_genre_name():<15}{movie.get_availability:<12}    {movie.get_price():<2}    {movie.get_rental_count():<10}")
 
 # movie_index(movies, movie_id)
-#Helper function to find the index of a movie in the list based on its ID.
+'''Helper function to find the index of a movie in the list based on its ID.'''
 def movie_index(movies,movie_id):
     movie_id = input("Enter the movie ID: ").strip()
     for movie in movies:
-        if movie.get_id() == movie_id:
-            return movies.index(movie)
+        if movie.get_id() == movie_id:   
+            return movies.index(movie)   #Returns the index of the movie in the list
         else:
             print(f"Movie with ID {movie_id} not found.")
             return 
 
 #display_libary_summary(movies)
-#This function will display a summary of the movie library: total movies, available movies, and unavailable movies.
+'''This function will display a summary of the movie library: total movies, available movies, and unavailable movies.'''
 def display_library_summary(movies):
     total_movies = len(movies)
     available_movies = 0
     for movie in movies:
-        if movie.get_availability() == "True":
-            available_movies += 1
-    unavailable_movies = total_movies - available_movies
+        if movie.get_availability() == "True": ##Checking for availability
+            available_movies += 1   #Counting the available movies
+    unavailable_movies = total_movies - available_movies #Calculating the unavailable movies
     print(f"Total Movies: {total_movies}")
     print(f"Available Movies: {available_movies}")
     print(f"Unavailable Movies: {unavailable_movies}")
 
 # main()
-#This function will run the main program loop, allowing the user to interact with the movie library system.
+'''This function will run the main program loop, allowing the user to interact with the movie library system.'''
 def main():
-    file_name = input("Enter the catalog file name: ")
-    movies = load_movies(file_name)
-    choice = ""
+    file_name = input("Enter the catalog file name: ")  #For loading the catalog file
+    movies = load_movies(file_name)   #Loading the movies from the CSV file
+    choice = ""        ## Initialize choice to an empty string
     print_menu()
-    while choice != "0":
-        choice = input("Enter your selection: ")
-        if choice == "0":
+    while choice != "0":    ## Loop until the user chooses to exit
+        choice = input("Enter your selection: ")  
+        if choice == "0": 
             update_catalog = input("Would you like to update the catalog (yes/y, no/n)? ") #For updating the catalog
-            if update_catalog.lower() in ['yes', 'y']:
-                save_movies(file_name, movies)
+            if update_catalog.lower() == 'yes' or 'y':   #If the user wants to update the catalog
+                save_movies(file_name, movies)  #Saving the movies to the CSV file
                 print("Movie catalog has been updated. Goodbye!")
             else:
                 print("Movie catalog has not been updated. Goodbye!")
-           
+           #call the functions based on the user's choice
         elif choice == "1":
             search_term = input("Enter the search term: ")
             search_movies(movies, search_term)
